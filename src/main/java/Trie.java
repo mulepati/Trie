@@ -1,9 +1,6 @@
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Trie {
     private Tree trie = new Tree();
@@ -27,11 +24,42 @@ public class Trie {
             if (child == null) {
                 child = new EntryNode(character, i == word.length() - 1);
                 current.addChild(child);
+            } else if(i == (word.length() - 1)) {
+                child.setTerminal(true);
             }
 
             current = child;
         }
     }
+
+    public void remove(String word) {
+        EntryNode current = trie.getRoot();
+        if(contains(word)) {
+            for (int i = 0; i <= word.length() - 1; i++) {
+                char character = word.charAt(i);
+                current = current.getChild(character);
+            }
+            current.remove();
+            current = trie.getRoot();
+        }
+        for (int x = 0; x <= word.length(); x++) {
+            if (contains(word)) {
+                for (int i = 0; i < x; i++) {
+                    char character = word.charAt(i);
+                    EntryNode child = current.getChild(character);
+                    if (child != null) {
+                        current = current.getChild(character);
+                    }
+                }
+                if (current.childrenSize() < 2 && !current.isTerminal()) {
+                    current.remove();
+                }
+            }
+        }
+
+
+    }
+
 
     public boolean contains(String potentialWord) {
         EntryNode current = trie.getRoot();
@@ -59,12 +87,14 @@ public class Trie {
         Trie trie = new Trie();
         trie.addWords(words);
         trie.printTrie();
-
+        trie.remove("shorebird");
+        trie.printTrie();
         System.out.println();
         System.out.println("This test should report false:");
         System.out.println("Contains 's': " + trie.contains("s"));
         System.out.println("Contains 'bye': " + trie.contains("bye"));
         System.out.println("Contains 'bird': " + trie.contains("bird"));
+        System.out.println("Removes 'shorebird' : " + trie.contains("shorebird"));
 
         System.out.println();
         System.out.println("These tests should report true:");
