@@ -15,6 +15,13 @@ public class EntryNode {
         this.isTerminal = isTerminal;
     }
 
+    void remove() {
+        children = new HashMap<>();
+    }
+
+    int childrenSize() {
+        return children.size();
+    }
 
     EntryNode getChild(Character data) {
         return children.get(data);
@@ -27,6 +34,7 @@ public class EntryNode {
     boolean isTerminal() {
         return isTerminal;
     }
+
 
     void setTerminal(boolean isTerminal) {
         this.isTerminal = isTerminal;
